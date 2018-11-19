@@ -1,0 +1,30 @@
+version: '3.5'
+services:
+
+    app:
+        image: inedo/proget
+        restart: unless-stopped
+        depends_on:
+            - db
+        networks:
+            - net
+        ports:
+            - "8001:80"
+        volumes:
+            - "/etc/localtime:/etc/localtime:ro"
+            - "./data/packages:/var/proget/packages"
+            - "./data/extensions:/var/proget/extensions"
+    
+    db:
+        image: postgres
+        restart: unless-stopped
+        networks:
+            net:
+                aliases:
+                    - proget-postgres
+        volumes:
+            - "/etc/localtime:/etc/localtime:ro"
+            - "./data/db:/var/lib/postgresql/data"
+
+networks:
+    net:
